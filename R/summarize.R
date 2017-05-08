@@ -18,7 +18,9 @@
 ## summary
 ## R script for summarizing demand data
 ##
-##
+## @ggplot2 = grammar of graphics
+## link @ https://cran.r-project.org/web/packages/ggplot2/index.html
+## license @ https://cran.r-project.org/web/licenses/GPL-2
 ##
 
 ##' Applies Stein, Koffarnus, Snider, Quisenberry, & Bickel's (2015) criteria for identification of nonsystematic purchase task data.
@@ -31,7 +33,7 @@
 ##' @param reversals Numeric vector of length equal to one. The criterion by which the number of reversals from number of consecutive (see ncons0) 0s will be compared. Number of reversals above this criterion will be flagged. Default value is 0.
 ##' @param ncons0 Numer of consecutive 0s prior to a positive value is used to flag for a reversal. Value can be either 1 (relatively more conservative) or 2 (default; as recommended by Stein et al., (2015).
 ##' @return Dataframe
-##' @author Brent Kaplan <bkaplan4@@ku.edu>
+##' @author Brent Kaplan <bkaplan.ku@@gmail.com>
 ##' @examples
 ##' ## Using all default values
 ##' CheckUnsystematic(apt, deltaq = 0.025, bounce = 0.10, reversals = 0, ncons0 = 2)
@@ -125,7 +127,7 @@ CheckUnsystematic <- function(dat, deltaq = 0.025, bounce = 0.10, reversals = 0,
 ##' @param dat Dataframe (long form)
 ##' @param bwplot Boolean. If TRUE, box and whisker plot is saved into "../plots/" directory. Default is FALSE
 ##' @return Dataframe with descriptive statistics
-##' @author Brent Kaplan <bkaplan4@@ku.edu>
+##' @author Brent Kaplan <bkaplan.ku@@gmail.com>
 ##' @examples
 ##' GetDescriptives(apt)
 ##' @export
@@ -155,8 +157,15 @@ GetDescriptives <- function(dat, bwplot = FALSE) {
         basename <- "bwplot-"
         outdir <- createOutdir(basedir = basedir, basename = basename)[[1]]
 
-        pdf(file = paste0(outdir, "bwplot", ".pdf"), width = 7, height = 6)
-        boxplot(dat$y ~ dat$x, xlab = "Price", ylab = "Reported Consumption")
+        ## pdf(file = paste0(outdir, "bwplot", ".pdf"), width = 7, height = 6)
+        ## boxplot(dat$y ~ dat$x, xlab = "Price", ylab = "Reported Consumption")
+        ## dev.off()
+
+        png(file = paste0(outdir, "bwplot.png"), width = 7, height = 6)
+        ggplot(dat, aes(x = as.factor(x), y = y)) +
+            geom_boxplot() +
+            labs(x = "Price", y = "Reported Consumption") +
+            theme_apa()
         dev.off()
     }
     dfres

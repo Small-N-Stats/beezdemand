@@ -3,29 +3,28 @@ An R package containing commonly used functions for analyzing behavioral economi
 
 ### Installation
 ----------------
-Install and load the devtools package. Then, use install_github to install the package.
+Install and load the devtools package. Then, use install_github to
+install the package and associated vignette.
 
 ```r
 install.packages("devtools")
 install.packages("digest")
 
-library(devtools)
-
-install_github("brentkaplan/beezdemand")
+devtools::install_github("brentkaplan/beezdemand", build_vignettes = TRUE)
 
 library(beezdemand)
 ```
 
 #### Note About Use
-Currently, this version (0.0.6) is under development. You are free to use it,
+Currently, this version (0.0.85) is under development. You are free to use it,
 but be aware that there might be bugs present.
-If you find issues or would like to contribute, please contact me at <bkaplan4@ku.edu>.
+If you find issues or would like to contribute, please contact me at <bkaplan.ku@gmail.com>.
 
 ### Sample Implementation
 -------------------------
 
 #### Example dataset provided
-Example dataset of responses on an Alcohol Purchase Task. Participants
+Example dataset of responses on an Alcohol Purchase Task. Participants (id)
 reported the number of alcoholic drinks (y) they would be willing to
 purchase and consume at various prices (x; USD). Note the
 long format.
@@ -122,7 +121,7 @@ use in additional analyses and model specification.
 
 #### Share k globally while fitting other parameters locally
 Provides the ability to share k globally (across all participants)
-while estimating Q<sub>0</sub> and alpha locally. 
+while estimating Q<sub>0</sub> and alpha locally.
 
 ```r
 > head(FitCurves(apt, "hs", k = "share"), 3)
@@ -175,7 +174,7 @@ Description:
 - Steven R. Hursh, Institutes for Behavior Resources, Inc.
 (www.ibrinc.org)
 
-- Shawn P. Gilroy, (<shawn.gilroy@temple.edu>; [GitHub](https://github.com/miyamot0))
+- Shawn P. Gilroy, [GitHub](https://github.com/miyamot0)
 
 ### Recommended Readings
 ------------------------
@@ -193,9 +192,9 @@ Description:
 ### Questions, Suggestions, and Contributions
 ---------------------------------------------
 
-Have a question? Have a suggestion for a feature? Would you like to contribute? Email me at <bkaplan4@ku.edu>.
+Have a question? Have a suggestion for a feature? Would you like to contribute? Email me at <bkaplan.ku@gmail.com>.
 
 ### License
 -----------
 
-GPL-Version 2
+GPL Version 2 or later

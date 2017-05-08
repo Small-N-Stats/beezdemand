@@ -16,12 +16,11 @@ Numeric
 Calculates a k value by looking for the max/min consumption across entire dataset and adds .5 to that range
 }
 \details{
-Will look for minimum greater zero
+Will look for maximum/minimum greater zero
 }
 \examples{
 GetK(apt)
 }
 \author{
-Brent Kaplan <bkaplan4@ku.edu>
+Brent Kaplan <bkaplan.ku@gmail.com>
 }
-

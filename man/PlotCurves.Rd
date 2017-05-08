@@ -4,7 +4,7 @@
 \alias{PlotCurves}
 \title{Plot Curves}
 \usage{
-PlotCurves(adf, dfrow, fit, outdir, fitfail, tobquote, vartext)
+PlotCurves(adf, dfrow, fit, outdir = "../plots/", fitfail, tobquote, vartext)
 }
 \arguments{
 \item{adf}{Data frame (long form) of purchase task data.}
@@ -31,6 +31,5 @@ Creates plots
 Creates and saves plots of individual demand curves
 }
 \author{
-Brent Kaplan <bkaplan4@ku.edu>
+Brent Kaplan <bkaplan.ku@gmail.com>
 }
-

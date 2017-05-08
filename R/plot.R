@@ -38,7 +38,6 @@
 ##' @author library("emdbook")
 ##' @export
 lseq <- function(from=.0000000001, to=1000, length.out=14) {
-    ## CHANGE? should this be log10?
   exp(seq(log(from), log(to), length.out = length.out))
 }
 
@@ -49,7 +48,7 @@ lseq <- function(from=.0000000001, to=1000, length.out=14) {
 ##' @title Create Minor Tick Sequence
 ##' @param maj Value from function lseq
 ##' @return Vector
-##' @author Brent Kaplan <bkaplan4@@ku.edu>
+##' @author Brent Kaplan <bkaplan.ku@@gmail.com>
 ##' @export
 minTicks <- function(maj) {
     minticks <- vector(length = (length(maj)-1) * 10)
@@ -65,6 +64,39 @@ minTicks <- function(maj) {
     }
 }
 
+##' APA theme for ggplot
+##'
+##' Theme for ggplot graphics that closely align with APA formatting
+##' @title APA Theme
+##' @param plot.box Boolean for a box around the plot
+##' @return ggplot theme
+##' @author Brent Kaplan <bkaplan.ku@@gmail.com>
+##' @export
+theme_apa <- function(plot.box = FALSE){
+    helv <- "Helvetica"
+
+    out <- theme(
+        plot.title = element_text(family = helv, size = 14, face = "bold", colour = "black"),
+        axis.title.x = element_text(family = helv, size = 14, colour = "black"),
+        axis.title.y = element_text(family = helv, size = 14, angle = 90, colour = "black"),
+        axis.text.x = element_text(family = helv, size = 11, colour = "black"),
+        axis.text.y = element_text(family = helv, size = 11, colour = "black"),
+        axis.ticks = element_line(colour="black"))
+
+    if (plot.box) {
+        out <- out + theme(panel.background = element_rect(fill = "white",
+                colour = "black"), panel.border = element_rect(fill = NA,
+                colour = "white"), axis.line = element_line())
+    } else {
+        out <- out + theme(panel.background = element_blank(),
+                           panel.border = element_blank(),
+                           panel.grid.major = element_blank(),
+                           panel.grid.minor = element_blank(),
+                           axis.line = element_line(colour = "black"))
+    }
+    out
+}
+
 
 ##' Creates plots
 ##'
@@ -78,15 +110,18 @@ minTicks <- function(maj) {
 ##' @param tobquote Character string to be evaluated
 ##' @param vartext Character vector to match demand indices
 ##' @return Nothing
-##' @author Brent Kaplan <bkaplan4@@ku.edu>
+##' @author Brent Kaplan <bkaplan.ku@@gmail.com>
 ##' @export
-PlotCurves <- function(adf, dfrow, fit, outdir, fitfail, tobquote, vartext) {
+PlotCurves <- function(adf, dfrow, fit, outdir = "../plots/", fitfail, tobquote, vartext) {
+    ## TODO 20170430: rewrite using ggplot, add arithmetic y for koff,
+    ## anticipate for normalization curves.
     majlabels <- c(".0000000001", ".000000001", ".00000001", ".0000001", ".000001", ".00001", ".0001", ".001", ".01", ".1", "1", "10", "100", "1000")
     majticks <- lseq()
     minticks <- minTicks(majticks)
 
     if (!fitfail) {
-        tempnew <- data.frame(x = seq(min(adf$x[adf$x > 0]), max(adf$x), length.out = 100), k = dfrow[["K"]])
+        tempnew <- data.frame(x = seq(min(adf$x[adf$x > 0]), max(adf$x),
+                                      length.out = 1000), k = dfrow[["K"]])
         if (dfrow[["Equation"]] == "hs") {
             tempnew$y <- 10^(predict(fit, newdata = tempnew))
         } else if (dfrow[["Equation"]] == "koff") {
@@ -99,12 +134,14 @@ PlotCurves <- function(adf, dfrow, fit, outdir, fitfail, tobquote, vartext) {
         ymin <- min(c(tempnew$y, adf$y[adf$y > 0], 1))
         ymax <- min(c(1000, max(c(tempnew$y, adf$y)))) + 5
 
-        pdf(file = paste0(outdir, "Participant-", dfrow[["Participant"]], ".pdf"))
+        png(file = paste0(outdir, "Participant-", dfrow[["Participant"]], ".png"))
         par(mar = c(5, 4, 4, 4) + 0.3)
-        plot(tempnew$x, tempnew$y, type = "n", log = "xy", yaxt = "n", xaxt = "n", bty = "l",
+        plot(tempnew$x, tempnew$y, type = "n", log = "xy", yaxt = "n",
+             xaxt = "n", bty = "l",
              xlim = c(xmin, xmax),
              ylim = c(ymin, ymax),
-             xlab = "Price", ylab = "Reported Consumption", main = paste("Participant", dfrow[["Participant"]], sep = "-"))
+             xlab = "Price", ylab = "Reported Consumption",
+             main = paste("Participant", dfrow[["Participant"]], sep = "-"))
         usr <- 10^par("usr")
         points(adf$x, adf$y)
         axis(1, majticks, labels = majlabels)
@@ -128,12 +165,13 @@ PlotCurves <- function(adf, dfrow, fit, outdir, fitfail, tobquote, vartext) {
         ymin <- min(c(adf$y[adf$y > 0], 1))
         ymax <- min(c(1000, max(adf$y))) + 5
 
-        pdf(file = paste0(outdir, "Participant-", dfrow[["Participant"]], ".pdf"))
+        png(file = paste0(outdir, "Participant-", dfrow[["Participant"]], ".png"))
         par(mar = c(5, 4, 4, 4) + 0.3)
         plot(adf$x, adf$y, type = "n", log = "xy", yaxt = "n", xaxt = "n", bty = "l",
              xlim = c(xmin, xmax),
              ylim = c(ymin, ymax),
-             xlab = "Price", ylab = "Reported Consumption", main = paste("Participant", dfrow[["Participant"]], sep = "-"))
+             xlab = "Price", ylab = "Reported Consumption",
+             main = paste("Participant", dfrow[["Participant"]], sep = "-"))
         usr <- 10^par("usr")
         points(adf$x, adf$y)
         axis(1, majticks, labels = majlabels)
